@@ -1,0 +1,19 @@
+<idea-plugin>
+  <id>com.yourorg.paged3way</id>
+  <name>Paged Three Way Merge</name>
+  <vendor email="dev@yourorg.com">YourOrg</vendor>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.vcs</depends>
+  <depends>Git4Idea</depends>
+  <depends>com.intellij.modules.diff</depends>
+
+  <actions>
+    <action id="com.yourorg.paged3way.PagedThreeWayAction"
+            class="com.yourorg.paged3way.PagedThreeWayAction"
+            text="Paged Three Way Merge"
+            description="View three configured branches with paging">
+      <add-to-group group-id="Vcs.Toolbar" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt M"/>
+    </action>
+  </actions>
+</idea-plugin>
