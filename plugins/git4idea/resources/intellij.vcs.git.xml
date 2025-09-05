@@ -512,6 +512,14 @@
 
     <action id="Git.Branches.Popup.Fetch"
             class="git4idea.ui.branch.GitBranchPopupFetchAction"/>
+
+    <action id="com.yourorg.paged3way.PagedThreeWayAction"
+            class="com.yourorg.paged3way.PagedThreeWayAction"
+            text="Paged Three Way Merge"
+            description="View three configured branches with paging">
+      <add-to-group group-id="Vcs.Toolbar" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt M"/>
+    </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
