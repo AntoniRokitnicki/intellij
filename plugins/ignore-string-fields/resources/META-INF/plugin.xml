@@ -1,0 +1,20 @@
+<idea-plugin>
+  <id>com.example.ignorestrings</id>
+  <name>Ignore String Fields</name>
+  <vendor email="dev@example.com">Example</vendor>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.java</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <lang.foldingBuilder language="JAVA" implementationClass="com.example.ignorestrings.StringFieldFoldingBuilder"/>
+    <structureViewFactory implementation="com.example.ignorestrings.StringFieldStructureFilter"/>
+    <findUsagesHandlerFactory implementation="com.example.ignorestrings.StringFieldFindUsagesHandlerFactory"/>
+    <usageFilteringRuleProvider implementation="com.example.ignorestrings.HideStringFieldUsagesRule\$Provider"/>
+    <inspectionSuppressor language="JAVA" implementationClass="com.example.ignorestrings.StringFieldInspectionSuppressor"/>
+    <completion.contributor language="JAVA" implementationClass="com.example.ignorestrings.StringFieldCompletionContributor"/>
+  </extensions>
+
+  <actions>
+    <action id="ToggleIgnoreStringFields" class="com.example.ignorestrings.ToggleIgnoreStringFieldsAction" text="Ignore String Fields" description="Toggle hiding and ignoring String fields"/>
+  </actions>
+</idea-plugin>
