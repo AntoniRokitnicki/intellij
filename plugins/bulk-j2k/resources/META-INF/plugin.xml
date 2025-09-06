@@ -1,0 +1,14 @@
+<idea-plugin>
+  <id>org.jetbrains.plugins.bulkj2k</id>
+  <name>Bulk Java to Kotlin Converter</name>
+  <vendor>JetBrains</vendor>
+  <description>Converts all Java files in project to Kotlin using built-in J2K converter.</description>
+  <depends>com.intellij.modules.java</depends>
+  <depends>org.jetbrains.kotlin</depends>
+  <actions>
+    <action id="BulkJavaToKotlinAction"
+            class="org.jetbrains.plugins.bulkj2k.BulkJavaToKotlinAction"
+            text="Bulk Convert Java to Kotlin"
+            description="Run Java to Kotlin conversion for all project Java files" />
+  </actions>
+</idea-plugin>
