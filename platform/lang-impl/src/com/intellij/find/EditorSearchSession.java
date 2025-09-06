@@ -108,7 +108,8 @@ public class EditorSearchSession implements SearchSession,
       .addPrimaryReplaceActions(new ReplaceAction(),
                                 new ReplaceAllAction(),
                                 new ExcludeAction())
-      .addExtraReplaceAction(new TogglePreserveCaseAction())
+      .addExtraReplaceAction(new TogglePreserveCaseAction(),
+                             new ReplaceScriptAction())
       .addReplaceFieldActions(new PrevOccurrenceAction(false),
                               new NextOccurrenceAction(false))
       .withCloseAction(this::close)
