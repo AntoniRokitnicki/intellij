@@ -1,0 +1,5 @@
+<idea-plugin>
+  <extensions defaultExtensionNs="com.intellij">
+    <fileEditorProvider implementation="org.jetbrains.plugins.gradle.ui.dependencies.DependenciesTableEditorProvider"/>
+  </extensions>
+</idea-plugin>
