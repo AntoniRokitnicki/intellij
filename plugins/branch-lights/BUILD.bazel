@@ -1,0 +1,31 @@
+### auto-generated section `build intellij.branchLights` start
+load("@rules_jvm//:jvm.bzl", "jvm_library", "jvm_resources")
+
+jvm_resources(
+  name = "branch-lights_resources",
+  files = glob(["resources/**/*"]),
+  strip_prefix = "resources",
+)
+
+jvm_library(
+  name = "branch-lights",
+  module_name = "intellij.branchlights",
+  visibility = ["//visibility:public"],
+  srcs = glob(["src/**/*.kt", "src/**/*.java", "src/**/*.form"], allow_empty = True),
+  deps = [
+    "@lib//:kotlin-stdlib",
+    "//platform/core-api:core",
+    "//platform/core-ui",
+    "//platform/util/concurrency",
+    "//platform/diff-api:diff",
+    "//platform/diff-impl",
+    "//platform/editor-ui-api:editor-ui",
+    "//platform/platform-impl:ide-impl",
+    "//platform/projectModel-api:projectModel",
+    "//platform/vcs-api:vcs",
+    "//platform/vcs-impl",
+    "//plugins/git4idea:vcs-git",
+  ],
+  runtime_deps = [":branch-lights_resources"],
+)
+### auto-generated section `build intellij.branchLights` end
