@@ -1,0 +1,29 @@
+<idea-plugin>
+  <id>com.yourorg.withme.browser</id>
+  <name>WithMe Embedded Browser</name>
+  <vendor email="dev@yourorg.com">YourOrg</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+
+  <!-- opcjonalna integracja z Code With Me; plugin startuje także bez tego -->
+  <depends optional="true" config-file="withme-dep.xml">com.jetbrains.codeWithMe</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow id="WithMe Browser"
+                anchor="right"
+                factoryClass="com.yourorg.withmebrowser.ui.WithMeBrowserToolWindowFactory"
+                icon="AllIcons.General.Web"/>
+    <applicationService serviceImplementation="com.yourorg.withmebrowser.sync.WithMeSyncService"/>
+  </extensions>
+
+  <actions>
+    <action id="com.yourorg.withmebrowser.Open"
+            class="com.yourorg.withmebrowser.ui.actions.OpenWithMeBrowserAction"
+            text="Open WithMe Browser"
+            description="Open the collaborative embedded browser tool window"
+            icon="AllIcons.General.Web">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+  </actions>
+</idea-plugin>
