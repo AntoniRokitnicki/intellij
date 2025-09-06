@@ -1,0 +1,12 @@
+<idea-plugin>
+  <id>com.intellij.methods</id>
+  <name>Methods Explorer</name>
+  <vendor>JetBrains</vendor>
+
+  <depends>com.intellij.java</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <virtualFileSystem implementation="com.intellij.methods.fs.MethodsVirtualFileSystem"/>
+    <fileEditorProvider implementation="com.intellij.methods.editor.MethodsEditorProvider"/>
+  </extensions>
+</idea-plugin>
