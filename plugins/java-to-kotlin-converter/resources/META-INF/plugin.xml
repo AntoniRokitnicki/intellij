@@ -1,0 +1,12 @@
+<idea-plugin>
+    <id>org.jetbrains.plugins.javatokotlin</id>
+    <name>Java to Kotlin Converter</name>
+    <description>Converts all Java files in the project to Kotlin with configurable options.</description>
+    <depends>com.intellij.modules.platform</depends>
+    <actions>
+        <action id="ConvertProjectToKotlin"
+                class="org.jetbrains.plugins.javatokotlin.ConvertProjectToKotlinAction"
+                text="Convert Project Java to Kotlin"
+                description="Converts all Java files in the project to Kotlin"/>
+    </actions>
+</idea-plugin>
