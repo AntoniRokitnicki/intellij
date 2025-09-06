@@ -1,0 +1,3 @@
+- name: lib/main-method-augmenter.jar
+  modules:
+    - name: intellij.main.method.augmenter

@@ -1,0 +1,23 @@
+load("@rules_jvm//:jvm.bzl", "jvm_library", "jvm_resources")
+
+jvm_resources(
+  name = "main-method-augmenter_resources",
+  files = glob(["resources/**/*"]),
+  strip_prefix = "resources",
+)
+
+jvm_library(
+  name = "main-method-augmenter",
+  module_name = "intellij.main.method.augmenter",
+  visibility = ["//visibility:public"],
+  srcs = glob(["src/**/*.java"], allow_empty = True),
+  deps = [
+    "//platform/util",
+    "//platform/core-api:core",
+    "//platform/platform-api:ide",
+    "//platform/lang-api:lang",
+    "//java/java-psi-api:psi",
+    "//java/openapi:java",
+  ],
+  runtime_deps = [":main-method-augmenter_resources"],
+)

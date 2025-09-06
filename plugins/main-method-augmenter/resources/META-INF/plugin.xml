@@ -1,0 +1,10 @@
+<idea-plugin>
+  <id>com.intellij.mainmethodaugmenter</id>
+  <name>Main Method Augmenter</name>
+  <vendor>OpenAI</vendor>
+  <description>Augments Java classes with a synthetic main method.</description>
+  <depends>com.intellij.modules.java</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <lang.psiAugmentProvider implementation="com.intellij.mainmethodaugmenter.MainMethodAugmentProvider"/>
+  </extensions>
+</idea-plugin>
