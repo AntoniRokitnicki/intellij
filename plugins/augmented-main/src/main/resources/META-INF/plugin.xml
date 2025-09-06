@@ -1,0 +1,11 @@
+<idea-plugin>
+    <id>com.example.augmentedmain</id>
+    <name>Augmented Main</name>
+    <vendor>Example</vendor>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <psi.augment.provider implementation="com.example.augmentedmain.AugmentedMainAugmentProvider"/>
+        <programRunner implementation="com.example.augmentedmain.AugmentedMainRunner"/>
+    </extensions>
+</idea-plugin>
