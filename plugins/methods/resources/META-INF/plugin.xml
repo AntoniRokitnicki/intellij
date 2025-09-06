@@ -1,0 +1,10 @@
+<idea-plugin>
+  <id>Methods</id>
+  <name>Methods</name>
+  <vendor>JetBrains</vendor>
+  <depends>com.intellij.modules.platform</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <postStartupActivity implementation="com.intellij.methods.vfs.MethodsVfsInitializer"/>
+    <customScopesProvider implementation="com.intellij.methods.scope.MethodsScopeProvider"/>
+  </extensions>
+</idea-plugin>
