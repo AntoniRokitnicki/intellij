@@ -1,0 +1,3 @@
+- name: lib/zenec-java.jar
+  modules:
+    - name: intellij.zenecjava
