@@ -1,0 +1,3 @@
+- name: lib/methodsfs.jar
+  modules:
+    - name: intellij.methodsfs
