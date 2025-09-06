@@ -1,0 +1,10 @@
+<idea-plugin>
+    <id>com.example.configdsl</id>
+    <name>Config DSL</name>
+    <vendor email="support@example.com">Example</vendor>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <scriptDefinitionsSource implementation="com.example.configdsl.ConfigScriptDefinitionSource"/>
+    </extensions>
+</idea-plugin>
