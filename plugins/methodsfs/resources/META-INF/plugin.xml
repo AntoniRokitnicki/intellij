@@ -1,0 +1,25 @@
+<idea-plugin>
+  <id>com.yourorg.methodsfs</id>
+  <name>Methods VFS and Scope</name>
+  <vendor email="dev@yourorg.com">YourOrg</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.java</depends>
+
+  <depends optional="true" config-file="kotlin-dep.xml">org.jetbrains.kotlin</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileEditorProvider implementation="com.yourorg.methodsfs.editor.MethodsEditorProvider"/>
+    <customScopesProvider implementation="com.yourorg.methodsfs.scope.MethodsScopeProvider"/>
+  </extensions>
+
+  <applicationListeners>
+    <listener class="com.yourorg.methodsfs.vfs.MethodsVfsRegistrar"
+              topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+  </applicationListeners>
+
+  <actions>
+    <action id="com.yourorg.methodsfs.OpenMethodsForCurrentFileAction" class="com.yourorg.methodsfs.action.OpenMethodsForCurrentFileAction" text="Open Methods for File"/>
+  </actions>
+</idea-plugin>
