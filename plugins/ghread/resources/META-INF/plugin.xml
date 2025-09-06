@@ -1,0 +1,25 @@
+<idea-plugin>
+  <id>com.yourorg.ghread</id>
+  <name>GitHub Read-Only (gh)</name>
+  <vendor email="dev@yourorg.com">YourOrg</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow id="GitHub Read"
+                anchor="left"
+                factoryClass="com.yourorg.ghread.ui.GhToolWindowFactory"
+                icon="AllIcons.Vcs.Vendors.Github"/>
+  </extensions>
+
+  <actions>
+    <action id="com.yourorg.ghread.Open"
+            class="com.yourorg.ghread.ui.actions.OpenGhToolWindowAction"
+            text="Open GitHub Read Tool Window"
+            description="Open read-only GitHub browser via gh CLI"
+            icon="AllIcons.Vcs.Vendors.Github">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+  </actions>
+</idea-plugin>
