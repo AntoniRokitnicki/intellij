@@ -1,0 +1,14 @@
+<idea-plugin>
+  <id>com.intellij.dependency.heatmap</id>
+  <name>Dependency Heatmap</name>
+  <vendor>OpenAI</vendor>
+  <description>Computes PageRank-based centrality of classes.</description>
+
+  <depends>com.intellij.modules.platform</depends>
+
+  <actions>
+    <action id="DependencyHeatmap.ComputeCentrality" class="com.intellij.depheatmap.ComputeCentralityAction" text="Compute Dependency Centrality" description="Compute PageRank-based centrality for project classes">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+  </actions>
+</idea-plugin>

@@ -1,0 +1,3 @@
+- name: lib/dependency-heatmap.jar
+  modules:
+  - name: intellij.dependency.heatmap
