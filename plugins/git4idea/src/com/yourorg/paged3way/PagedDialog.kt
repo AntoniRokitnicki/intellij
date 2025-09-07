@@ -34,6 +34,8 @@ internal class PagedDialog(
   private val nextBtn = JButton("Next")
   private val commitBtn = JButton("Commit")
   private val revertBtn = JButton("Revert")
+  private val patchBtn = JButton("Create Patch")
+  private val applyPatchBtn = JButton("Apply Patch")
   private val pinCheck = JCheckBox("Pin middle", settings.pinMiddle != null)
   private val overlapCombo = JComboBox(arrayOf("Overlap 2", "Overlap 1"))
 
@@ -61,6 +63,8 @@ internal class PagedDialog(
     top.add(nextBtn)
     top.add(commitBtn)
     top.add(revertBtn)
+    top.add(patchBtn)
+    top.add(applyPatchBtn)
     top.add(pinCheck)
     top.add(overlapCombo)
     top.add(statusLabel)
@@ -69,6 +73,8 @@ internal class PagedDialog(
     nextBtn.addActionListener { move(1) }
     commitBtn.addActionListener { commitCurrentTriple() }
     revertBtn.addActionListener { revertCurrentTriple() }
+    patchBtn.addActionListener { createPatch() }
+    applyPatchBtn.addActionListener { applyPatch() }
 
     pinCheck.addActionListener {
       controller.pinMiddle = if (pinCheck.isSelected) controller.currentMiddleName() else null
@@ -140,6 +146,22 @@ internal class PagedDialog(
     ApplicationManager.getApplication().executeOnPooledThread {
       val ok = GitLight.revertFiles(project, repo, files)
       SwingUtilities.invokeLater { if (ok) refresh() }
+    }
+  }
+
+  private fun createPatch() {
+    FileDocumentManager.getInstance().saveAllDocuments()
+    val files = controller.currentWorkingFiles()
+    ApplicationManager.getApplication().executeOnPooledThread {
+      PatchOperations.createPatch(project, repo, files)
+    }
+  }
+
+  private fun applyPatch() {
+    FileDocumentManager.getInstance().saveAllDocuments()
+    ApplicationManager.getApplication().invokeLater {
+      PatchOperations.applyPatchFromClipboard(project)
+      refresh()
     }
   }
 }
