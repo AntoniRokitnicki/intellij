@@ -1,0 +1,36 @@
+load("//build:compiler-options.bzl", "create_kotlinc_options")
+load("@rules_jvm//:jvm.bzl", "jvm_library", "jvm_resources")
+
+create_kotlinc_options(
+  name = "custom_class_heatmap",
+  x_explicit_api_mode = "strict",
+)
+
+jvm_resources(
+  name = "class_heatmap_resources",
+  files = glob(["resources/**/*"]),
+  strip_prefix = "resources",
+)
+
+jvm_library(
+  name = "class_heatmap",
+  module_name = "intellij.class.heatmap",
+  visibility = ["//visibility:public"],
+  srcs = glob(["src/**/*.kt", "src/**/*.java", "src/**/*.form"], allow_empty = True),
+  kotlinc_opts = ":custom_class_heatmap",
+  deps = [
+    "//platform/platform-api:ide",
+    "//platform/platform-impl:ide-impl",
+    "//platform/core-api:core",
+    "//platform/core-ui",
+    "//platform/lang-api:lang",
+    "//platform/lang-impl",
+    "//java/openapi:java",
+    "//java/java-psi-api:psi",
+    "//platform/util",
+    "//platform/editor-ui-api:editor-ui",
+    "//platform/projectModel-api:projectModel",
+    "//platform/analysis-api:analysis",
+  ],
+  runtime_deps = [":class_heatmap_resources"],
+)

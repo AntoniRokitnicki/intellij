@@ -1,0 +1,3 @@
+- name: lib/class-heatmap.jar
+  modules:
+  - name: intellij.class.heatmap

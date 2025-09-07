@@ -1,0 +1,10 @@
+<idea-plugin package="com.intellij.classHeatmap" allow-bundled-update="true">
+  <id>ClassHeatmap</id>
+  <name>Class Heatmap</name>
+  <vendor>JetBrains</vendor>
+  <description>Displays reference counts for classes in the project.</description>
+  <depends>com.intellij.java</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow id="Class Heatmap" anchor="right" factoryClass="com.intellij.classHeatmap.ClassHeatmapToolWindowFactory"/>
+  </extensions>
+</idea-plugin>
