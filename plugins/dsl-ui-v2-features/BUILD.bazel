@@ -1,0 +1,20 @@
+load("@rules_jvm//:jvm.bzl", "jvm_library", "jvm_resources")
+
+jvm_resources(
+  name = "dsl_ui_v2_features_resources",
+  files = glob(["resources/**/*"]),
+  strip_prefix = "resources",
+)
+
+jvm_library(
+  name = "dsl_ui_v2_features",
+  module_name = "intellij.dsl.ui.v2.features",
+  srcs = glob(["src/**/*.kt"], allow_empty = True),
+  deps = [
+    "@lib//:kotlin-stdlib",
+    "//platform/platform-api:util",
+    "//platform/platform-impl:ide-impl",
+  ],
+  runtime_deps = [":dsl_ui_v2_features_resources"],
+  visibility = ["//visibility:public"],
+)

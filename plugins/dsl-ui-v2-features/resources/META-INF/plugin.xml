@@ -1,0 +1,15 @@
+<idea-plugin>
+  <id>dsl-ui-v2-features</id>
+  <name>DSL UI V2 Features</name>
+  <vendor>AI</vendor>
+  <description>Displays a dialog demonstrating Kotlin DSL UI v2 components.</description>
+  <depends>com.intellij.modules.platform</depends>
+  <actions>
+    <action id="DslUiV2FeaturesAction"
+            class="com.intellij.ui.dsl.features.ShowDslUiV2FeaturesAction"
+            text="DSL UI V2 Features"
+            description="Show DSL UI V2 feature dialog">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+  </actions>
+</idea-plugin>
