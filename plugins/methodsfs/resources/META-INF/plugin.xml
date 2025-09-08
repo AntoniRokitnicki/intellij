@@ -1,0 +1,26 @@
+<idea-plugin>
+  <id>com.yourorg.methodsfs</id>
+  <name>Methods VFS and Scope</name>
+  <vendor email="dev@yourorg.com">YourOrg</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.java</depends>
+
+  <depends optional="true" config-file="kotlin-dep.xml">org.jetbrains.kotlin</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <virtualFileSystem implementationClass="com.yourorg.methodsfs.vfs.MethodsVirtualFileSystem" key="methods"/>
+    <fileEditorProvider implementation="com.yourorg.methodsfs.editor.MethodsEditorProvider"/>
+    <customScopesProvider implementation="com.yourorg.methodsfs.scope.MethodsScopeProvider"/>
+  </extensions>
+
+  <actions>
+    <action id="Methods.OpenForFile"
+            class="com.yourorg.methodsfs.actions.OpenMethodsForFileAction"
+            text="Open Methods Virtual File"
+            description="Open methods:// virtual file for current file">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+  </actions>
+</idea-plugin>
