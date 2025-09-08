@@ -1,19 +1,17 @@
 package com.yourorg.paged3way
 
-import com.intellij.diff.DiffContentFactory
-import com.intellij.diff.DiffManager
-import com.intellij.diff.requests.SimpleThreesideDiffRequest
+import com.intellij.diff.DiffRequestFactory
+import com.intellij.diff.merge.MergeRequest
+import com.intellij.diff.merge.MergeRequestProcessor
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.vcs.changes.ChangeListManager
-import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import git4idea.repo.GitRepository
@@ -57,7 +55,8 @@ private class PagedDialog(
 ) : DialogWrapper(project, true) {
 
   private val controller = PagedController(project, repo, file, settings)
-  private val diffPanel = DiffManager.getInstance().createRequestPanel(project, disposable, null)
+  private val mergeHolder = JPanel(BorderLayout())
+  private var mergeProcessor: MergeRequestProcessor? = null
   private val statusLabel = JLabel("")
 
   private val prevBtn = JButton("Prev")
@@ -86,7 +85,7 @@ private class PagedDialog(
     top.add(overlapCombo)
     top.add(statusLabel)
     panel.add(top, BorderLayout.NORTH)
-    panel.add(diffPanel.component, BorderLayout.CENTER)
+    panel.add(mergeHolder, BorderLayout.CENTER)
 
     prevBtn.addActionListener { move(-1) }
     nextBtn.addActionListener { move(1) }
@@ -124,7 +123,15 @@ private class PagedDialog(
     ApplicationManager.getApplication().executeOnPooledThread {
       val req = controller.buildRequest(controller.index)
       SwingUtilities.invokeLater {
-        diffPanel.setRequest(req)
+        mergeProcessor?.let { Disposer.dispose(it) }
+        val processor = object : MergeRequestProcessor(project) {}
+        processor.init(req)
+        Disposer.register(disposable, processor)
+        mergeHolder.removeAll()
+        mergeHolder.add(processor.component, BorderLayout.CENTER)
+        mergeHolder.revalidate()
+        mergeHolder.repaint()
+        mergeProcessor = processor
       }
       controller.prefetchNeighbors()
     }
@@ -177,8 +184,6 @@ private class PagedController(
   settings: PagedSettings
 ) {
   private val provider = GitBranchContentProvider(project)
-  private val df = DiffContentFactory.getInstance()
-  private val fileType = com.intellij.openapi.fileTypes.FileTypeRegistry.getInstance().getFileTypeByFileName(file.name)
 
   var branches: List<String> = settings.branches
   var overlap: Int = settings.overlap
@@ -207,15 +212,14 @@ private class PagedController(
 
   fun currentWorkingFiles(): List<VirtualFile> = listOf(file)
 
-  fun buildRequest(i: Int): SimpleThreesideDiffRequest {
+  fun buildRequest(i: Int): MergeRequest {
     val (l, m, r) = computeTripleBranches(i)
-    val leftText = provider.loadFileAtBranch(repo, l, file)
-    val midText = provider.loadFileAtBranch(repo, m, file)
-    val rightText = provider.loadFileAtBranch(repo, r, file)
-    val left = df.create(project, leftText, fileType)
-    val middle = df.create(project, midText, fileType)
-    val right = df.create(project, rightText, fileType)
-    return SimpleThreesideDiffRequest("${file.name}   $l   $m   $r", left, middle, right)
+    val leftBytes = provider.loadFileAtBranch(repo, l, file).toByteArray()
+    val baseBytes = provider.loadFileAtBranch(repo, m, file).toByteArray()
+    val rightBytes = provider.loadFileAtBranch(repo, r, file).toByteArray()
+    val title = "${file.name}   $l   $m   $r"
+    return DiffRequestFactory.getInstance()
+      .createMergeRequest(project, file, listOf(leftBytes, baseBytes, rightBytes), title, listOf(l, m, r))
   }
 
   fun prefetchNeighbors() {
