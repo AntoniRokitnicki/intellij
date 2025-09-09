@@ -1,7 +1,10 @@
 package com.intellij.methods
 
 import com.intellij.methods.scope.FilesWithAnyMethodPackageSet
+import com.intellij.methods.scope.MethodsSearchScopeProvider
+import com.intellij.openapi.actionSystem.impl.SimpleDataContext
 import com.intellij.openapi.roots.DependencyValidationManager
+import com.intellij.psi.search.SearchScopeProvider
 import com.intellij.testFramework.LightPlatformTestCase
 
 /**
@@ -14,5 +17,11 @@ class MethodsScopeTest : LightPlatformTestCase() {
     val scope = FilesWithAnyMethodPackageSet()
     val holder = DependencyValidationManager.getInstance(project)
     assertTrue(scope.contains(vf, project, holder))
+  }
+
+  fun testSearchScopesProvider() {
+    val provider = SearchScopeProvider.EP_NAME.extensionList.filterIsInstance<MethodsSearchScopeProvider>().single()
+    val scopes = provider.getSearchScopes(project, SimpleDataContext.getProjectContext(project))
+    assertEquals(2, scopes.size)
   }
 }

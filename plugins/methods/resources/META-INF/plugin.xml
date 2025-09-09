@@ -6,5 +6,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <postStartupActivity implementation="com.intellij.methods.vfs.MethodsVfsInitializer"/>
     <customScopesProvider implementation="com.intellij.methods.scope.MethodsScopeProvider"/>
+    <searchScopesProvider implementation="com.intellij.methods.scope.MethodsSearchScopeProvider"/>
   </extensions>
 </idea-plugin>
