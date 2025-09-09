@@ -1,16 +1,26 @@
-# IntelliJ Listener Interfaces
+# IntelliJ VCS and Git Listener Interfaces
 
-This document summarizes common listener interfaces available when developing IntelliJ-based plugins. Each section describes what the listener does and highlights three typical use cases.
+This document focuses on listener interfaces related to version control. For each listener you will find a short description, the key methods with their inputs and outputs, and three common scenarios where the listener is useful.
 
 ## VcsListener
-**Description:** Notified when VCS mappings change.
+**Description:** Notified when per-directory VCS mappings change.
+
+**Methods and data:**
+- `directoryMappingChanged()` – no parameters and returns `void`. The mapping is already updated; use this callback to react to the new configuration.
+
 **Top 3 use cases:**
 1. Adjust plugin configuration after repository roots are added or removed.
 2. Trigger reindexing or rescan affected modules.
 3. Update UI components that depend on VCS settings.
 
 ## ChangeListListener
-**Description:** Tracks changes to VCS changelists.
+**Description:** Tracks VCS changelist events from `ChangeListManager`.
+
+**Methods and data:**
+- `changeListAdded(ChangeList list)`, `changeListRemoved(ChangeList list)` – receive affected `ChangeList` objects; return type `void`.
+- `changesAdded(Collection<Change> changes, ChangeList toList)` – supplies modified `Change` entries and target list; returns `void`.
+- Other callbacks such as `changeListRenamed` and `defaultListChanged` provide old and new values. Implementations return `void`; to modify changelists call `ChangeListManager` APIs.
+
 **Top 3 use cases:**
 1. React to files being added or removed from changelists.
 2. Enforce coding standards before changes are committed.
@@ -18,6 +28,12 @@ This document summarizes common listener interfaces available when developing In
 
 ## BranchChangeListener
 **Description:** Receives notifications when the active VCS branch changes.
+
+**Methods and data:**
+- `branchWillChange(String branchName)` – called before the checkout begins.
+- `branchHasChanged(String branchName)` – invoked after the branch switch completes.
+Both methods receive the target branch name and return `void`.
+
 **Top 3 use cases:**
 1. Refresh project configuration when switching branches.
 2. Validate work-in-progress against target branch policies.
@@ -25,6 +41,13 @@ This document summarizes common listener interfaces available when developing In
 
 ## VcsAnnotationRefresher
 **Description:** Signals that file annotations, such as blame info, need refreshing.
+
+**Methods and data:**
+- `dirtyUnder(VirtualFile file)` – mark all annotations under a directory as stale.
+- `dirty(BaseRevision currentRevision)` / `dirty(String path)` – request a refresh for a specific revision or path.
+- `configurationChanged(VcsKey key)` – called when annotation-related VCS settings change.
+All methods return `void` and supply context objects needed to re-fetch annotations.
+
 **Top 3 use cases:**
 1. Invalidate cached annotations after commit operations.
 2. Update gutter displays when authorship data changes.
@@ -32,6 +55,12 @@ This document summarizes common listener interfaces available when developing In
 
 ## GitPushListener
 **Description:** Informed when a Git push operation completes.
+
+**Methods and data:**
+- `onCompleted(GitRepository repository, GitPushRepoResult pushResult)` – provides the repository and the push result.
+- `onCompleted(GitRepository repository, GitPushRepoResult pushResult, Map<String, VcsPushOptionValue> params)` – experimental overload supplying push parameters.
+Methods return `void`; use the supplied `GitPushRepoResult` to access commits pushed and remote messages.
+
 **Top 3 use cases:**
 1. Notify issue trackers or CI systems after pushing.
 2. Display results of push in custom tool windows.
@@ -39,6 +68,10 @@ This document summarizes common listener interfaces available when developing In
 
 ## GitRepositoryChangeListener
 **Description:** Fired when Git repository state updates, excluding index changes.
+
+**Methods and data:**
+- `repositoryChanged(GitRepository repository)` – supplies the updated repository; return type `void`.
+
 **Top 3 use cases:**
 1. Refresh branch lists when remote refs change.
 2. Update plugin caches of repository metadata.
@@ -46,6 +79,11 @@ This document summarizes common listener interfaces available when developing In
 
 ## GitRepositoryStateChangeListener
 **Description:** Provides detailed notifications about repository state transitions, e.g., during rebase.
+
+**Methods and data:**
+- `repositoryCreated(GitRepository repository, GitRepoInfo info)` – optional notification when tracking begins.
+- `repositoryChanged(GitRepository repository, GitRepoInfo previousInfo, GitRepoInfo info)` – gives old and new repository information to compare states. Methods return `void`.
+
 **Top 3 use cases:**
 1. Track ongoing operations like merges or rebases.
 2. Show warnings when repository enters a detached HEAD state.
@@ -53,92 +91,12 @@ This document summarizes common listener interfaces available when developing In
 
 ## GitConfigListener
 **Description:** Notified when the `.git/config` file is modified.
+
+**Methods and data:**
+- `notifyConfigChanged(GitRepository repository)` – receives the repository whose configuration changed; returns `void`.
+
 **Top 3 use cases:**
 1. Reapply plugin-specific Git settings when configuration changes.
 2. Validate repository settings for required options.
 3. Alert users to potential misconfigurations.
-
-## AppLifecycleListener
-**Description:** Observes application-level lifecycle events.
-**Top 3 use cases:**
-1. Initialize global resources at startup.
-2. Release resources during shutdown.
-3. Log lifecycle transitions for diagnostics.
-
-## ProjectManagerListener
-**Description:** Notified about project opening, closing, and creation events.
-**Top 3 use cases:**
-1. Configure project-specific services on open.
-2. Perform cleanup before project close.
-3. Track recently opened projects for analytics.
-
-## ModuleManagerListener
-**Description:** Watches changes to project modules.
-**Top 3 use cases:**
-1. Adjust module-level settings when modules are added or removed.
-2. Rebuild module dependency graphs.
-3. Validate module structure for plugin requirements.
-
-## EditorFactoryListener
-**Description:** Handles editor creation and disposal events.
-**Top 3 use cases:**
-1. Attach custom editor widgets on creation.
-2. Track open editor count for resource management.
-3. Remove listeners when editors are closed.
-
-## FileEditorManagerListener
-**Description:** Monitors file editor opening, closing, and selection changes.
-**Top 3 use cases:**
-1. Implement recent files navigation.
-2. Save editor state across sessions.
-3. Update context-sensitive tool windows.
-
-## VirtualFileListener
-**Description:** Receives notifications for virtual file system events.
-**Top 3 use cases:**
-1. React to file creation, deletion, or rename operations.
-2. Mirror file changes to external storage.
-3. Invalidate caches when files are modified.
-
-## BulkFileListener
-**Description:** Handles batch file system changes efficiently.
-**Top 3 use cases:**
-1. Process large refactorings without performance penalties.
-2. Group related file events for transactional operations.
-3. Trigger project-wide index updates after mass edits.
-
-## DocumentListener
-**Description:** Tracks in-memory document edits.
-**Top 3 use cases:**
-1. Implement live code analysis as users type.
-2. Auto-save drafts after significant edits.
-3. Update external systems on text changes.
-
-## FileDocumentManagerListener
-**Description:** Notified when documents are saved to or reloaded from disk.
-**Top 3 use cases:**
-1. Validate file content before saving.
-2. Refresh editors when files change externally.
-3. Maintain version history snapshots.
-
-## PsiTreeChangeListener
-**Description:** Observes changes in the PSI tree representing code structure.
-**Top 3 use cases:**
-1. Update custom code inspections on structure modifications.
-2. Maintain AST-based caches.
-3. Track refactoring operations.
-
-## AnActionListener
-**Description:** Monitors IDE action invocation lifecycle.
-**Top 3 use cases:**
-1. Audit command usage.
-2. Enable or disable actions dynamically.
-3. Implement custom shortcuts processing.
-
-## ToolWindowManagerListener
-**Description:** Notified about tool window registration and state changes.
-**Top 3 use cases:**
-1. Initialize content when a tool window is opened.
-2. Persist tool window visibility across sessions.
-3. Adjust layout based on active tool windows.
 
