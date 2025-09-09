@@ -20,11 +20,38 @@ Dodaj wpis do `plugin.xml` w sekcji rozszerzeń:
 
 Alternatywnie możesz użyć `McpToolsProvider` i zwrócić listę narzędzi w metodzie `getTools()`.
 
-## 3. Najważniejsze klasy i adnotacje
+## 3. Klasy i ich API
 
-- `McpToolset` – interfejs i zasady tworzenia zestawu narzędzi.
-- `McpToolsProvider` – opcjonalny sposób ręcznego dostarczania narzędzi.
-- `McpTool` i `McpDescription` – adnotacje używane przy definicji narzędzi.
+### McpToolset
+Interfejs oznaczający zestaw narzędzi. Nie posiada metod; narzędzia są zwykłymi metodami w klasie i odkrywane przez MCP na podstawie adnotacji. Rejestracja odbywa się poprzez extension point `com.intellij.mcpServer.mcpToolset`.
+
+### McpToolsProvider
+Alternatywny extension point (`com.intellij.mcpServer.mcpToolsProvider`), w którym należy zaimplementować metodę `fun getTools(): List<McpTool>` zwracającą gotowe obiekty narzędzi.
+
+### McpTool
+Interfejs reprezentujący pojedyncze narzędzie. Wymaga implementacji:
+- właściwości `descriptor: McpToolDescriptor` opisującej nazwę, opis i schemat wejścia/wyjścia,
+- funkcji `suspend fun call(args: JsonObject): McpToolCallResult` zawierającej logikę narzędzia.
+
+### McpToolDescriptor
+Opis narzędzia przekazywany klientowi. Zawiera pola:
+- `name: String`,
+- `description: String`,
+- `inputSchema: McpToolSchema`,
+- `outputSchema: McpToolSchema?` (opcjonalny opis danych zwracanych).
+
+### McpToolSchema
+Reprezentuje schemat wejścia lub wyjścia w formacie JSON Schema. Udostępnia konstruktory pomocnicze `ofPropertiesMap` i `ofPropertiesSchema` oraz metodę `prettyPrint()` zwracającą sformatowany schemat.
+
+### McpToolCallResult i McpToolCallResultContent
+Wynik wywołania narzędzia. `McpToolCallResult` zawiera tablicę `content: Array<McpToolCallResultContent>`, opcjonalne `structuredContent: JsonObject` oraz flagę `isError`. Udostępnia metody fabryczne `text()` i `error()`. Jedyną dostępną implementacją `McpToolCallResultContent` jest `Text` przechowująca ciąg znaków.
+
+### McpExpectedError i `mcpFail`
+Klasa `McpExpectedError` reprezentuje błąd, który powinien zostać przekazany klientowi bez modyfikacji. Funkcja pomocnicza `mcpFail(message)` rzuca taki wyjątek.
+
+### Adnotacje
+- `@McpTool(name: String = "")` – oznacza metodę jako narzędzie (z opcjonalną nazwą).
+- `@McpDescription("...")` – dodaje opis do narzędzia, parametru lub typu.
 
 ## 4. Dostęp do projektu i obsługa błędów
 
@@ -39,4 +66,3 @@ bazel test //plugins/mcp-server:mcpserver_test
 ```
 
 W razie braku środowiska bazel mogą pojawić się błędy pobierania – należy je rozwiązać przed uruchomieniem testów.
-
