@@ -11,6 +11,7 @@
                 anchor="left"
                 factoryClass="com.yourorg.ghread.ui.GhToolWindowFactory"
                 icon="AllIcons.Vcs.Vendors.Github"/>
+    <applicationConfigurable instance="com.yourorg.ghread.settings.GhSettingsConfigurable" displayName="GitHub Read"/>
   </extensions>
 
   <actions>
