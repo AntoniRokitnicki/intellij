@@ -51,6 +51,12 @@
             class="com.intellij.diff.actions.impl.OpenInEditorAction"
             use-shortcut-of="EditSource"/>
 
+    <action id="Diff.ThreeWayMergeSample"
+            class="com.intellij.diff.actions.ThreeWayMergeSampleAction"
+            text="Sample 3-Way Merge">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+
     <group id="Diff.NavigationActions">
       <reference ref="PreviousDiff"/>
       <reference ref="NextDiff"/>
