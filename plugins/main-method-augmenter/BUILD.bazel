@@ -21,3 +21,28 @@ jvm_library(
   ],
   runtime_deps = [":main-method-augmenter_resources"],
 )
+
+jvm_library(
+  name = "main-method-augmenter_test_lib",
+  visibility = ["//visibility:public"],
+  srcs = glob(["testSrc/**/*.java"], allow_empty = True),
+  associates = [":main-method-augmenter"],
+  deps = [
+    "//platform/util",
+    "//platform/core-api:core",
+    "//platform/platform-api:ide",
+    "//platform/lang-api:lang",
+    "//java/java-psi-api:psi",
+    "//java/openapi:java",
+    "//platform/testFramework",
+    "//platform/testFramework:testFramework_test_lib",
+  ],
+  runtime_deps = [":main-method-augmenter_resources"],
+)
+
+load("@community//build:tests-options.bzl", "jps_test")
+
+jps_test(
+  name = "main-method-augmenter_test",
+  runtime_deps = [":main-method-augmenter_test_lib"],
+)

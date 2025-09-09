@@ -2,6 +2,8 @@ package com.intellij.mainmethodaugmenter;
 
 import com.intellij.psi.*;
 import com.intellij.psi.augment.PsiAugmentProvider;
+import com.intellij.psi.impl.source.PsiExtensibleClass;
+import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,10 +21,20 @@ public final class MainMethodAugmentProvider extends PsiAugmentProvider {
     if (type != PsiMethod.class || !(element instanceof PsiClass psiClass)) {
       return Collections.emptyList();
     }
-    if (psiClass.isInterface() || psiClass.isAnnotationType()) {
+    if (nameHint != null && !"main".equals(nameHint)) {
       return Collections.emptyList();
     }
-    if (psiClass.findMethodsByName("main", false).length > 0) {
+    if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum() ||
+        psiClass.isRecord() || psiClass.hasModifierProperty(PsiModifier.ABSTRACT)) {
+      return Collections.emptyList();
+    }
+    if (psiClass instanceof PsiExtensibleClass extensible) {
+      if (ContainerUtil.exists(extensible.getOwnMethods(), m -> "main".equals(m.getName()))) {
+        return Collections.emptyList();
+      }
+    }
+    else if (psiClass.findMethodsByName("main", false).length > 0) {
+      // Fallback for non-extensible classes
       return Collections.emptyList();
     }
     PsiElementFactory factory = JavaPsiFacade.getElementFactory(psiClass.getProject());
@@ -30,8 +42,6 @@ public final class MainMethodAugmentProvider extends PsiAugmentProvider {
       "public static void main(String[] args) {}",
       psiClass
     );
-    @SuppressWarnings("unchecked")
-    List<Psi> result = (List<Psi>)Collections.singletonList(mainMethod);
-    return result;
+    return Collections.singletonList(type.cast(mainMethod));
   }
 }
