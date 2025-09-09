@@ -20,6 +20,10 @@ import org.jetbrains.kotlin.idea.actions.JavaToKotlinAction
 /**
  * Action that converts all Java files in the project to Kotlin using the built-in J2K converter.
  * It exposes a dialog with available J2K options and performs the conversion in batches.
+ *
+ * This class lives in the community repo for now but is intended to be extracted into a
+ * standalone plugin.  It relies on the Kotlin plugin's internal [JavaToKotlinAction.Handler]
+ * API; consumers extracting this module should provide an alternative if the API changes.
  */
 class BulkJavaToKotlinAction : AnAction() {
     override fun update(e: AnActionEvent) {
