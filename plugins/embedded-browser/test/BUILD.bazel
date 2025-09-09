@@ -1,0 +1,24 @@
+load("@rules_jvm//:jvm.bzl", "jvm_library")
+load("@community//build:tests-options.bzl", "jps_test")
+
+jvm_library(
+  name = "tests_test_lib",
+  module_name = "intellij.embedded.browser.tests",
+  visibility = ["//visibility:public"],
+  srcs = glob(["src/**/*.kt", "src/**/*.java"], allow_empty = True),
+  deps = [
+    "//plugins/embedded-browser:embedded-browser",
+    "//platform/testFramework",
+    "//platform/core-api:core",
+    "//platform/platform-api:ide",
+    "//platform/platform-impl:ide-impl",
+    "//platform/util",
+    "@lib//:jcef",
+    "@lib//:junit4",
+  ],
+)
+
+jps_test(
+  name = "tests_test",
+  runtime_deps = [":tests_test_lib"],
+)
