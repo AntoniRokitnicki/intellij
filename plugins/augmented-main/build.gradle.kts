@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.intellij") version "1.16.0"
+    id("org.jetbrains.intellij.platform") version "2.0.1"
     kotlin("jvm") version "1.9.22"
 }
 
@@ -8,14 +8,26 @@ version = "0.1.0"
 
 repositories {
     mavenCentral()
+    intellijPlatform { defaultRepositories() }
 }
 
-intellij {
-    version.set("2023.1")
-    type.set("IC")
-    plugins.set(listOf("java"))
+dependencies {
+    intellijPlatform {
+        create("IC", "2023.1")
+        bundledPlugin("com.intellij.java")
+    }
 }
 
 kotlin {
     jvmToolchain(17)
+}
+
+sourceSets {
+    main {
+        kotlin.srcDir("src/main/kotlin")
+        resources.srcDir("src/main/resources")
+    }
+    test {
+        kotlin.srcDir("src/test/kotlin")
+    }
 }
