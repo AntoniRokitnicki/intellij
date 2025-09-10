@@ -97,7 +97,7 @@ public class EditorSearchSession implements SearchSession,
     mySearchResults = new SearchResults(myEditor, project);
     myLivePreviewController = new LivePreviewController(mySearchResults, this, myDisposable);
 
-    SearchReplaceComponent.Builder builder = SearchReplaceComponent
+    myComponent = SearchReplaceComponent
       .buildFor(project, myEditor.getContentComponent(), this)
       .addPrimarySearchActions(createPrimarySearchActions())
       .addExtraSearchActions(new ToggleMatchCase(),
@@ -112,13 +112,8 @@ public class EditorSearchSession implements SearchSession,
       .addReplaceFieldActions(new PrevOccurrenceAction(false),
                               new NextOccurrenceAction(false))
       .withCloseAction(this::close)
-      .withReplaceAction(this::replaceCurrent);
-
-    if (Registry.is("find.replace.script.enabled")) {
-      builder.addExtraReplaceAction(new ReplaceScriptAction());
-    }
-
-    myComponent = builder.build();
+      .withReplaceAction(this::replaceCurrent)
+      .build();
 
     myComponent.addListener(this);
     UiNotifyConnector.installOn(myComponent, new Activatable() {

@@ -1,6 +1,5 @@
 package com.intellij.find.editorHeaderActions
 
-import com.intellij.find.FindBundle
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -9,8 +8,8 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.util.registry.Registry
 import com.intellij.ui.EditorTextField
+import com.intellij.find.editorHeaderActions.ReplaceScriptBundle
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -18,10 +17,9 @@ import javax.swing.JPanel
 /**
  * Opens a dialog allowing user to execute a Kotlin script that transforms each selected line.
  */
-class ReplaceScriptAction : AnAction(FindBundle.message("find.replace.script.button"), null, AllIcons.Actions.RunAll), DumbAware {
+class ReplaceScriptAction : AnAction(ReplaceScriptBundle.message("replace.script.button"), null, AllIcons.Actions.RunAll), DumbAware {
   override fun update(e: AnActionEvent) {
-    e.presentation.isEnabledAndVisible =
-      Registry.`is`("find.replace.script.enabled") && e.getData(CommonDataKeys.EDITOR) != null
+    e.presentation.isEnabledAndVisible = e.getData(CommonDataKeys.EDITOR) != null
   }
 
   override fun actionPerformed(e: AnActionEvent) {
@@ -35,8 +33,8 @@ private class ReplaceScriptDialog(private val project: Project, private val edit
   private val scriptField = EditorTextField("", project, com.intellij.lang.Language.findLanguageByID("kotlin")?.associatedFileType)
 
   init {
-    title = FindBundle.message("find.replace.script.dialog.title")
-    setOKButtonText(FindBundle.message("find.replace.script.execute"))
+    title = ReplaceScriptBundle.message("replace.script.dialog.title")
+    setOKButtonText(ReplaceScriptBundle.message("replace.script.execute"))
     init()
   }
 

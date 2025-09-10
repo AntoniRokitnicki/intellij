@@ -1,11 +1,11 @@
 package com.intellij.find.editorHeaderActions
 
-import com.intellij.find.FindBundle
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.TextRange
+import com.intellij.find.editorHeaderActions.ReplaceScriptBundle
 import javax.script.Compilable
 import javax.script.Invocable
 import javax.script.ScriptEngineManager
@@ -41,10 +41,10 @@ internal object ReplaceScriptHandler {
       }
     }
     catch (ex: ScriptException) {
-      Messages.showErrorDialog(project, ex.message ?: "", FindBundle.message("find.replace.script.dialog.title"))
+      Messages.showErrorDialog(project, ex.message ?: "", ReplaceScriptBundle.message("replace.script.dialog.title"))
     }
     catch (ex: Exception) {
-      Messages.showErrorDialog(project, ex.message ?: "", FindBundle.message("find.replace.script.dialog.title"))
+      Messages.showErrorDialog(project, ex.message ?: "", ReplaceScriptBundle.message("replace.script.dialog.title"))
     }
   }
 }
