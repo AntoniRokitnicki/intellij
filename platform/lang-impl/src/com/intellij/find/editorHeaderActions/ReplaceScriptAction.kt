@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.ui.EditorTextField
 import java.awt.BorderLayout
 import javax.script.Compilable
@@ -25,6 +26,11 @@ import javax.swing.JPanel
  * Opens a dialog allowing user to execute a Kotlin script that transforms each selected line.
  */
 class ReplaceScriptAction : AnAction(FindBundle.message("find.replace.script.button"), null, AllIcons.Actions.RunAll), DumbAware {
+  override fun update(e: AnActionEvent) {
+    e.presentation.isEnabledAndVisible =
+      Registry.`is`("find.replace.script.enabled") && e.getData(CommonDataKeys.EDITOR) != null
+  }
+
   override fun actionPerformed(e: AnActionEvent) {
     val project = e.project ?: return
     val editor = e.getData(CommonDataKeys.EDITOR) ?: return

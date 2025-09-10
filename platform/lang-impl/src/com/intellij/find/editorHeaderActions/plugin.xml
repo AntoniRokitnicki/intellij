@@ -1,0 +1,21 @@
+<idea-plugin>
+  <!-- Plugin descriptor for extracting Replace Script feature -->
+  <id>com.intellij.replace.script</id>
+  <name>Replace Script</name>
+  <vendor>JetBrains</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>org.jetbrains.kotlin</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <registryKey key="find.replace.script.enabled" defaultValue="true"
+                 description="Enable Replace Script action in Find/Replace dialog"/>
+  </extensions>
+
+  <actions>
+    <action id="ReplaceScriptAction"
+            class="com.intellij.find.editorHeaderActions.ReplaceScriptAction"
+            text="Replace Script"
+            description="Execute Kotlin script to transform selected lines"/>
+  </actions>
+</idea-plugin>
